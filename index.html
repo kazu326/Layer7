@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layer07 維持率装置</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #030711;
+      --bg-deep: #050b19;
+      --panel: rgba(8, 18, 36, 0.82);
+      --panel-strong: rgba(10, 27, 55, 0.94);
+      --line: rgba(82, 169, 255, 0.32);
+      --line-soft: rgba(100, 181, 255, 0.16);
+      --text: #edf7ff;
+      --muted: #9fb4ca;
+      --blue: #35a7ff;
+      --cyan: #67e8f9;
+      --success: #4ade80;
+      --shadow: 0 0 30px rgba(31, 145, 255, 0.2);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(24, 119, 242, 0.25), transparent 34rem),
+        linear-gradient(180deg, #02050d 0%, var(--bg) 34%, var(--bg-deep) 100%);
+      color: var(--text);
+      font-family: "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+      line-height: 1.7;
+      letter-spacing: 0;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      content: "";
+      background-image:
+        linear-gradient(rgba(103, 232, 249, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(103, 232, 249, 0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 78%);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 72vh;
+      display: grid;
+      align-content: center;
+      padding: 72px 0 52px;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin: 0 0 18px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(28, 121, 255, 0.12);
+      color: var(--cyan);
+      font-size: 0.86rem;
+      font-weight: 700;
+      box-shadow: 0 0 24px rgba(53, 167, 255, 0.18);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 840px;
+      margin-bottom: 22px;
+      font-size: clamp(2.35rem, 8vw, 5.65rem);
+      line-height: 1.03;
+      font-weight: 900;
+    }
+
+    .hero-lead {
+      max-width: 760px;
+      margin-bottom: 34px;
+      color: #c8d8e7;
+      font-size: clamp(1.02rem, 2vw, 1.28rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .button-link,
+    button {
+      min-height: 44px;
+      border: 1px solid rgba(103, 232, 249, 0.38);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(43, 149, 255, 0.22), rgba(18, 57, 112, 0.42));
+      color: var(--text);
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+    }
+
+    button {
+      padding: 10px 14px;
+    }
+
+    .button-link:hover,
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(103, 232, 249, 0.72);
+      background: linear-gradient(180deg, rgba(53, 167, 255, 0.34), rgba(13, 74, 145, 0.5));
+    }
+
+    .button-link:focus-visible,
+    button:focus-visible,
+    summary:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(103, 232, 249, 0.86);
+      outline-offset: 3px;
+    }
+
+    .ghost-link {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .image-stack {
+      padding: 22px 0 78px;
+    }
+
+    .section-title {
+      margin-bottom: 10px;
+      color: var(--cyan);
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .image-section {
+      margin: 0 0 56px;
+      padding: clamp(14px, 2.4vw, 24px);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(8, 20, 43, 0.72), rgba(4, 10, 24, 0.92));
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42), var(--shadow);
+    }
+
+    .image-section img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid rgba(103, 232, 249, 0.32);
+      border-radius: var(--radius);
+      box-shadow: 0 0 42px rgba(53, 167, 255, 0.24);
+    }
+
+    .checklist-wrap {
+      padding: 34px 0 74px;
+    }
+
+    .cta-panel {
+      margin-bottom: 28px;
+      padding: clamp(22px, 4vw, 36px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(12, 42, 88, 0.92), rgba(5, 11, 24, 0.94));
+      box-shadow: 0 0 55px rgba(53, 167, 255, 0.2);
+    }
+
+    .cta-panel h2 {
+      margin-bottom: 10px;
+      font-size: clamp(1.55rem, 5vw, 3rem);
+      line-height: 1.18;
+    }
+
+    .cta-panel p {
+      margin-bottom: 0;
+      color: #c8d8e7;
+    }
+
+    .checklist-head {
+      display: flex;
+      gap: 18px;
+      align-items: end;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .checklist-head h2 {
+      margin-bottom: 0;
+      font-size: clamp(1.32rem, 3.4vw, 2.15rem);
+      line-height: 1.25;
+    }
+
+    .progress {
+      min-width: 142px;
+      padding: 9px 12px;
+      border: 1px solid rgba(74, 222, 128, 0.38);
+      border-radius: var(--radius);
+      background: rgba(12, 42, 35, 0.72);
+      color: #bbf7d0;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .accordion {
+      display: grid;
+      gap: 12px;
+    }
+
+    details {
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: clip;
+    }
+
+    details[open] {
+      border-color: rgba(103, 232, 249, 0.42);
+      background: var(--panel-strong);
+      box-shadow: 0 0 28px rgba(53, 167, 255, 0.12);
+    }
+
+    summary {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 58px;
+      padding: 14px 18px;
+      color: #e8f7ff;
+      font-weight: 900;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      flex: 0 0 auto;
+      content: "+";
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--cyan);
+      font-size: 1.15rem;
+      line-height: 1;
+      box-shadow: 0 0 16px rgba(103, 232, 249, 0.14);
+    }
+
+    details[open] summary::after {
+      content: "-";
+    }
+
+    .items {
+      display: grid;
+      gap: 8px;
+      padding: 0 18px 18px;
+    }
+
+    .check-item {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border: 1px solid rgba(103, 232, 249, 0.12);
+      border-radius: var(--radius);
+      background: rgba(2, 8, 18, 0.45);
+    }
+
+    .check-item input {
+      width: 18px;
+      height: 18px;
+      margin: 4px 0 0;
+      accent-color: var(--blue);
+    }
+
+    .check-item label {
+      color: #d8e8f6;
+      cursor: pointer;
+    }
+
+    .check-item:has(input:checked) {
+      border-color: rgba(74, 222, 128, 0.36);
+      background: rgba(22, 101, 52, 0.18);
+    }
+
+    .check-item:has(input:checked) label {
+      color: #eafff0;
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        width: min(100% - 28px, 1120px);
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 48px 0 34px;
+      }
+
+      .hero-actions,
+      .controls,
+      .checklist-head {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .button-link,
+      button,
+      .progress {
+        width: 100%;
+      }
+
+      .image-stack {
+        padding-bottom: 44px;
+      }
+
+      .image-section {
+        margin-bottom: 34px;
+      }
+
+      summary {
+        align-items: start;
+        padding: 13px 14px;
+      }
+
+      .items {
+        padding: 0 12px 14px;
+      }
+
+      .check-item {
+        padding: 9px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero page" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Layer07 Retention Design</p>
+        <h1 id="page-title">維持率と信頼を同時に設計する教育用ランディングページ</h1>
+        <p class="hero-lead">冒頭、音、視覚変化、感情導線、CTAまで。動画設計の抜け漏れを、画像教材と完成版チェックリストで一気に見直せる1ページです。</p>
+        <div class="hero-actions">
+          <a class="button-link" href="#checklist">チェックリストを見る</a>
+          <a class="ghost-link" href="#image-1">教材画像から確認する</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="image-stack page" aria-label="教育用教材画像">
+      <article class="image-section" id="image-1">
+        <p class="section-title">Section 01</p>
+        <img src="images/1.png" alt="Layer07の教育用教材画像1">
+      </article>
+
+      <article class="image-section" id="image-2">
+        <p class="section-title">Section 02</p>
+        <img src="images/2.png" alt="Layer07の教育用教材画像2">
+      </article>
+
+      <article class="image-section" id="image-3">
+        <p class="section-title">Section 03</p>
+        <img src="images/3.png" alt="Layer07の教育用教材画像3">
+      </article>
+
+      <article class="image-section" id="image-4">
+        <p class="section-title">Section 04</p>
+        <img src="images/4.png" alt="Layer07の教育用教材画像4">
+      </article>
+    </section>
+
+    <section class="checklist-wrap page" id="checklist" aria-labelledby="checklist-title">
+      <div class="cta-panel">
+        <h2>このチェックリストで動画設計を見直す</h2>
+        <p>刺激を足すだけでなく、注意の維持、信頼、感情の流れまで確認して、最後まで見たくなる構成へ整えます。</p>
+      </div>
+
+      <div class="checklist-head">
+        <h2 id="checklist-title">Layer07 維持率装置 完成版チェックリスト</h2>
+        <div class="progress" id="progress" aria-live="polite">0 / 0 完了</div>
+      </div>
+
+      <div class="controls" aria-label="チェックリスト操作">
+        <button type="button" id="open-all">全て開く</button>
+        <button type="button" id="close-all">全て閉じる</button>
+        <button type="button" id="reset-all">チェックをリセット</button>
+      </div>
+
+      <div class="accordion" id="accordion"></div>
+    </section>
+  </main>
+
+  <script>
+    const checklist = [
+      {
+        title: "Layer07-0 注意力マネジメント",
+        items: [
+          "刺激ではなく「注意の維持」を設計している",
+          "話が遅い",
+          "同じ画面が続く",
+          "結論が見えない",
+          "情報量が多すぎる",
+          "情報量が少なすぎる",
+          "音が不快",
+          "テロップが読みにくい",
+          "サムネと内容が違う",
+          "オチが予想できる",
+          "疲れる",
+          "難しすぎる",
+          "興味対象がズレている"
+        ]
+      },
+      {
+        title: "Layer07-A 冒頭（0〜8秒）",
+        items: [
+          "サムネと内容が一致している",
+          "1秒で世界観が伝わる",
+          "3秒以内にフックがある",
+          "ベネフィットが明確",
+          "「なぜ？」が残る",
+          "「どうなる？」が残る",
+          "テロップが大きく読みやすい",
+          "カットにテンポがある",
+          "8秒以内に興味を作れている"
+        ]
+      },
+      {
+        title: "Layer07-B 聴覚刺激（SE）",
+        items: [
+          "マウスクリック",
+          "タイピング",
+          "通知音",
+          "ボタン押下",
+          "シャッ",
+          "ザッ",
+          "パラパラ",
+          "スライド",
+          "ポン",
+          "ドン",
+          "ピコン",
+          "キラーン",
+          "視覚変化と同期している",
+          "入れすぎていない",
+          "世界観と一致している",
+          "音が主役になっていない"
+        ]
+      },
+      {
+        title: "Layer07-C 視覚刺激",
+        items: [
+          "ズームイン",
+          "ズームアウト",
+          "カメラ移動",
+          "図解挿入",
+          "画像挿入",
+          "強調アニメーション",
+          "テロップ変化",
+          "画面構成の変化"
+        ]
+      },
+      {
+        title: "Layer07-D パターンブレイク",
+        items: [
+          "3〜5秒ごとに変化がある",
+          "テンポ変化がある",
+          "視点が切り替わる",
+          "色が変わる",
+          "情報が切り替わる",
+          "ストーリー転換がある",
+          "意外性がある",
+          "ギャップがある"
+        ]
+      },
+      {
+        title: "Layer07-E 小道具演出",
+        items: [
+          "テーマに合うアイコン",
+          "ブランドに合う素材",
+          "固定マスコット",
+          "共通UI",
+          "シリーズ感がある"
+        ]
+      },
+      {
+        title: "Layer07-F テロップ",
+        items: [
+          "読みやすい",
+          "1〜2行以内",
+          "強調が明確",
+          "色を使いすぎていない",
+          "冒頭8秒は視認性優先",
+          "配置が安定している",
+          "読む負荷が少ない"
+        ]
+      },
+      {
+        title: "Layer07-G BGM",
+        items: [
+          "映像だけで伝わる",
+          "テロップだけでも伝わる",
+          "BGMは補助になっている",
+          "音量が控えめ",
+          "世界観と一致",
+          "無音区間を活用している"
+        ]
+      },
+      {
+        title: "Layer07-H 感情導線",
+        items: [
+          "驚きがある",
+          "共感がある",
+          "好奇心が動く",
+          "学びがある",
+          "納得がある",
+          "希望がある",
+          "感情が停滞していない",
+          "学び → 納得 → 希望 の流れがある"
+        ]
+      },
+      {
+        title: "Layer07-I 離脱ポイント監視",
+        items: [
+          "3秒",
+          "8秒",
+          "15秒",
+          "30秒",
+          "維持率グラフ確認",
+          "離脱箇所の記録",
+          "原因仮説を立てる",
+          "次回改善に反映"
+        ]
+      },
+      {
+        title: "Layer07-J CTA",
+        items: [
+          "一番盛り上がった後に入れている",
+          "短くシンプル",
+          "行動が明確",
+          "ベネフィットが明確",
+          "次の導線が自然"
+        ]
+      },
+      {
+        title: "Layer07-K 信頼維持",
+        items: [
+          "サムネ詐欺ではない",
+          "タイトル詐欺ではない",
+          "煽りすぎていない",
+          "SEがうるさすぎない",
+          "エフェクト過剰でない",
+          "テロップが読める",
+          "内容と演出が一致している",
+          "過剰な恐怖訴求をしていない",
+          "過剰な不安訴求をしていない",
+          "視聴後に満足感がある"
+        ]
+      },
+      {
+        title: "最終確認",
+        items: [
+          "最後まで見たくなるか",
+          "また見たくなるか",
+          "維持率 × 信頼 を同時に満たしているか"
+        ]
+      }
+    ];
+
+    const accordion = document.getElementById("accordion");
+    const progress = document.getElementById("progress");
+
+    function renderChecklist() {
+      accordion.innerHTML = checklist.map((group, groupIndex) => {
+        const items = group.items.map((item, itemIndex) => {
+          const id = `check-${groupIndex}-${itemIndex}`;
+          return `
+            <div class="check-item">
+              <input type="checkbox" id="${id}">
+              <label for="${id}">${item}</label>
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <details ${groupIndex === 0 ? "open" : ""}>
+            <summary>${group.title}</summary>
+            <div class="items">${items}</div>
+          </details>
+        `;
+      }).join("");
+    }
+
+    function updateProgress() {
+      const boxes = [...accordion.querySelectorAll('input[type="checkbox"]')];
+      const done = boxes.filter((box) => box.checked).length;
+      progress.textContent = `${done} / ${boxes.length} 完了`;
+    }
+
+    renderChecklist();
+    updateProgress();
+
+    accordion.addEventListener("change", (event) => {
+      if (event.target.matches('input[type="checkbox"]')) {
+        updateProgress();
+      }
+    });
+
+    document.getElementById("open-all").addEventListener("click", () => {
+      accordion.querySelectorAll("details").forEach((detail) => {
+        detail.open = true;
+      });
+    });
+
+    document.getElementById("close-all").addEventListener("click", () => {
+      accordion.querySelectorAll("details").forEach((detail) => {
+        detail.open = false;
+      });
+    });
+
+    document.getElementById("reset-all").addEventListener("click", () => {
+      accordion.querySelectorAll('input[type="checkbox"]').forEach((box) => {
+        box.checked = false;
+      });
+      updateProgress();
+    });
+  </script>
+</body>
+</html>

@@ -3,23 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Layer07 維持率装置</title>
+  <title>Layer07 Retention System</title>
   <style>
     :root {
       color-scheme: dark;
       --bg: #030711;
       --bg-deep: #050b19;
-      --panel: rgba(8, 18, 36, 0.82);
-      --panel-strong: rgba(10, 27, 55, 0.94);
-      --line: rgba(82, 169, 255, 0.32);
+      --panel: rgba(8, 18, 36, 0.84);
+      --panel-strong: rgba(10, 27, 55, 0.96);
+      --line: rgba(82, 169, 255, 0.36);
       --line-soft: rgba(100, 181, 255, 0.16);
       --text: #edf7ff;
       --muted: #9fb4ca;
       --blue: #35a7ff;
       --cyan: #67e8f9;
-      --success: #4ade80;
+      --green: #4ade80;
+      --danger: #fb7185;
       --shadow: 0 0 30px rgba(31, 145, 255, 0.2);
       --radius: 8px;
+      --header-h: 72px;
     }
 
     * {
@@ -33,7 +35,8 @@
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 20% 0%, rgba(24, 119, 242, 0.25), transparent 34rem),
+        radial-gradient(circle at 20% 0%, rgba(24, 119, 242, 0.26), transparent 34rem),
+        radial-gradient(circle at 85% 12%, rgba(74, 222, 128, 0.1), transparent 25rem),
         linear-gradient(180deg, #02050d 0%, var(--bg) 34%, var(--bg-deep) 100%);
       color: var(--text);
       font-family: "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
@@ -51,11 +54,24 @@
         linear-gradient(rgba(103, 232, 249, 0.06) 1px, transparent 1px),
         linear-gradient(90deg, rgba(103, 232, 249, 0.04) 1px, transparent 1px);
       background-size: 44px 44px;
-      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 78%);
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.92), transparent 80%);
     }
 
+    button,
     a {
       color: inherit;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
     }
 
     .page {
@@ -63,11 +79,111 @@
       margin: 0 auto;
     }
 
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      min-height: var(--header-h);
+      border-bottom: 1px solid rgba(103, 232, 249, 0.18);
+      background: rgba(3, 8, 18, 0.82);
+      backdrop-filter: blur(18px);
+    }
+
+    .header-inner {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: var(--header-h);
+    }
+
+    .brand {
+      display: grid;
+      gap: 1px;
+      min-width: max-content;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .brand small {
+      color: var(--cyan);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .tab-button,
+    .button-link,
+    .chip,
+    .modal-button,
+    .control-button {
+      min-height: 42px;
+      border: 1px solid rgba(103, 232, 249, 0.34);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(43, 149, 255, 0.19), rgba(18, 57, 112, 0.38));
+      color: var(--text);
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      white-space: nowrap;
+    }
+
+    .tab-button {
+      padding: 9px 12px;
+    }
+
+    .tab-button[aria-selected="true"] {
+      border-color: rgba(103, 232, 249, 0.82);
+      background: linear-gradient(180deg, rgba(53, 167, 255, 0.38), rgba(13, 74, 145, 0.56));
+      color: #ffffff;
+    }
+
+    .button-link,
+    .chip,
+    .modal-button,
+    .control-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+    }
+
+    .tab-button:hover,
+    .button-link:hover,
+    .chip:hover,
+    .modal-button:hover,
+    .control-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(103, 232, 249, 0.72);
+      background: linear-gradient(180deg, rgba(53, 167, 255, 0.32), rgba(13, 74, 145, 0.5));
+    }
+
+    .tab-button:focus-visible,
+    .button-link:focus-visible,
+    .chip:focus-visible,
+    .modal-button:focus-visible,
+    .control-button:focus-visible,
+    summary:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(103, 232, 249, 0.86);
+      outline-offset: 3px;
+    }
+
     .hero {
-      min-height: 72vh;
       display: grid;
       align-content: center;
-      padding: 72px 0 52px;
+      min-height: calc(74vh - var(--header-h));
+      padding: 70px 0 46px;
     }
 
     .eyebrow {
@@ -79,30 +195,23 @@
       background: rgba(28, 121, 255, 0.12);
       color: var(--cyan);
       font-size: 0.86rem;
-      font-weight: 700;
+      font-weight: 800;
       box-shadow: 0 0 24px rgba(53, 167, 255, 0.18);
-    }
-
-    h1,
-    h2,
-    h3,
-    p {
-      margin-top: 0;
     }
 
     h1 {
       max-width: 840px;
       margin-bottom: 22px;
-      font-size: clamp(2.35rem, 8vw, 5.65rem);
-      line-height: 1.03;
+      font-size: clamp(2.35rem, 8vw, 5.4rem);
+      line-height: 1.05;
       font-weight: 900;
     }
 
     .hero-lead {
-      max-width: 760px;
-      margin-bottom: 34px;
+      max-width: 800px;
+      margin-bottom: 32px;
       color: #c8d8e7;
-      font-size: clamp(1.02rem, 2vw, 1.28rem);
+      font-size: clamp(1.02rem, 2vw, 1.24rem);
     }
 
     .hero-actions {
@@ -112,66 +221,48 @@
       align-items: center;
     }
 
-    .button-link,
-    button {
-      min-height: 44px;
-      border: 1px solid rgba(103, 232, 249, 0.38);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(43, 149, 255, 0.22), rgba(18, 57, 112, 0.42));
-      color: var(--text);
-      font: inherit;
-      font-weight: 800;
-      text-decoration: none;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .button-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 11px 16px;
-    }
-
-    button {
-      padding: 10px 14px;
-    }
-
-    .button-link:hover,
-    button:hover {
-      transform: translateY(-1px);
-      border-color: rgba(103, 232, 249, 0.72);
-      background: linear-gradient(180deg, rgba(53, 167, 255, 0.34), rgba(13, 74, 145, 0.5));
-    }
-
-    .button-link:focus-visible,
-    button:focus-visible,
-    summary:focus-visible,
-    input:focus-visible {
-      outline: 3px solid rgba(103, 232, 249, 0.86);
-      outline-offset: 3px;
-    }
-
     .ghost-link {
       color: var(--muted);
-      font-weight: 700;
-    }
-
-    .image-stack {
-      padding: 22px 0 78px;
-    }
-
-    .section-title {
-      margin-bottom: 10px;
-      color: var(--cyan);
-      font-size: 0.95rem;
       font-weight: 800;
-      text-transform: uppercase;
+      text-decoration: none;
     }
 
-    .image-section {
-      margin: 0 0 56px;
+    .tab-panel {
+      padding: 24px 0 74px;
+    }
+
+    .tab-panel[hidden] {
+      display: none;
+    }
+
+    .layer-head {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 26px;
+      padding: clamp(20px, 4vw, 34px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(12, 42, 88, 0.9), rgba(5, 11, 24, 0.94));
+      box-shadow: 0 0 55px rgba(53, 167, 255, 0.18);
+    }
+
+    .layer-head h2 {
+      margin-bottom: 0;
+      font-size: clamp(1.55rem, 5vw, 3rem);
+      line-height: 1.2;
+    }
+
+    .layer-head p {
+      margin-bottom: 0;
+      color: #c8d8e7;
+    }
+
+    .image-grid {
+      display: grid;
+      gap: 36px;
+    }
+
+    .image-card {
       padding: clamp(14px, 2.4vw, 24px);
       border: 1px solid var(--line-soft);
       border-radius: var(--radius);
@@ -179,7 +270,23 @@
       box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42), var(--shadow);
     }
 
-    .image-section img {
+    .image-card-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      margin-bottom: 0;
+      color: var(--cyan);
+      font-size: 0.94rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .image-card img {
       display: block;
       width: 100%;
       height: auto;
@@ -188,28 +295,30 @@
       box-shadow: 0 0 42px rgba(53, 167, 255, 0.24);
     }
 
-    .checklist-wrap {
-      padding: 34px 0 74px;
-    }
-
-    .cta-panel {
-      margin-bottom: 28px;
-      padding: clamp(22px, 4vw, 36px);
-      border: 1px solid var(--line);
+    .reference-panel {
+      margin-bottom: 24px;
+      padding: 18px;
+      border: 1px solid var(--line-soft);
       border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(12, 42, 88, 0.92), rgba(5, 11, 24, 0.94));
-      box-shadow: 0 0 55px rgba(53, 167, 255, 0.2);
+      background: rgba(5, 14, 31, 0.82);
     }
 
-    .cta-panel h2 {
+    .reference-panel h3 {
       margin-bottom: 10px;
-      font-size: clamp(1.55rem, 5vw, 3rem);
-      line-height: 1.18;
+      font-size: 1rem;
     }
 
-    .cta-panel p {
-      margin-bottom: 0;
-      color: #c8d8e7;
+    .reference-chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+
+    .chip {
+      min-width: 46px;
+      padding-inline: 12px;
     }
 
     .checklist-head {
@@ -298,6 +407,23 @@
       content: "-";
     }
 
+    .summary-main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .reference-inline {
+      min-height: 32px;
+      padding: 5px 10px;
+      border: 1px solid rgba(103, 232, 249, 0.32);
+      border-radius: 999px;
+      background: rgba(53, 167, 255, 0.14);
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
     .items {
       display: grid;
       gap: 8px;
@@ -336,35 +462,109 @@
       color: #eafff0;
     }
 
-    @media (max-width: 700px) {
+    dialog {
+      width: min(960px, calc(100% - 28px));
+      max-height: min(92vh, 980px);
+      padding: 0;
+      border: 1px solid rgba(103, 232, 249, 0.5);
+      border-radius: var(--radius);
+      background: #030711;
+      color: var(--text);
+      box-shadow: 0 0 80px rgba(53, 167, 255, 0.26);
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 5, 14, 0.82);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-shell {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      max-height: min(92vh, 980px);
+    }
+
+    .modal-head,
+    .modal-foot {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(8, 18, 36, 0.94);
+    }
+
+    .modal-foot {
+      border-top: 1px solid var(--line-soft);
+      border-bottom: 0;
+    }
+
+    .modal-title {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .modal-body img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid rgba(103, 232, 249, 0.28);
+      border-radius: var(--radius);
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --header-h: 92px;
+      }
+
       .page {
         width: min(100% - 28px, 1120px);
       }
 
+      .header-inner {
+        display: grid;
+        gap: 8px;
+        align-content: center;
+        padding: 10px 0;
+      }
+
+      .tabs {
+        width: 100%;
+      }
+
       .hero {
         min-height: auto;
-        padding: 48px 0 34px;
+        padding: 44px 0 34px;
       }
 
       .hero-actions,
       .controls,
-      .checklist-head {
+      .checklist-head,
+      .image-card-head {
         align-items: stretch;
         flex-direction: column;
       }
 
       .button-link,
-      button,
+      .control-button,
       .progress {
         width: 100%;
       }
 
-      .image-stack {
-        padding-bottom: 44px;
+      .tab-panel {
+        padding-bottom: 46px;
       }
 
-      .image-section {
-        margin-bottom: 34px;
+      .image-grid {
+        gap: 28px;
       }
 
       summary {
@@ -379,49 +579,75 @@
       .check-item {
         padding: 9px;
       }
+
+      .modal-head,
+      .modal-foot {
+        flex-wrap: wrap;
+      }
+
+      .modal-button {
+        flex: 1 1 120px;
+      }
     }
   </style>
 </head>
 <body>
+  <header class="site-header">
+    <div class="header-inner page">
+      <div class="brand">
+        <span>Layer07</span>
+        <small>Retention System</small>
+      </div>
+      <nav class="tabs" role="tablist" aria-label="教材セクション">
+        <button class="tab-button" id="tab-qualifier" type="button" role="tab" aria-controls="panel-qualifier" aria-selected="true" data-tab="qualifier">予選 1-4</button>
+        <button class="tab-button" id="tab-main" type="button" role="tab" aria-controls="panel-main" aria-selected="false" data-tab="main">本戦 A-K</button>
+        <button class="tab-button" id="tab-checklist" type="button" role="tab" aria-controls="panel-checklist" aria-selected="false" data-tab="checklist">完成検査</button>
+      </nav>
+    </div>
+  </header>
+
   <main>
     <section class="hero page" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">Layer07 Retention Design</p>
-        <h1 id="page-title">維持率と信頼を同時に設計する教育用ランディングページ</h1>
-        <p class="hero-lead">冒頭、音、視覚変化、感情導線、CTAまで。動画設計の抜け漏れを、画像教材と完成版チェックリストで一気に見直せる1ページです。</p>
+        <p class="eyebrow">Layer07 Retention System</p>
+        <h1 id="page-title">視聴維持率は、設計できる。</h1>
+        <p class="hero-lead">おすすめに載るだけで終わらせない。冒頭8秒、刺激設計、感情導線、信頼維持までをつなぎ、最後まで見られ、また見たくなる動画へ整える。</p>
         <div class="hero-actions">
-          <a class="button-link" href="#checklist">チェックリストを見る</a>
-          <a class="ghost-link" href="#image-1">教材画像から確認する</a>
+          <button class="button-link" type="button" data-tab-jump="qualifier">3層で確認する</button>
+          <button class="button-link" type="button" data-tab-jump="checklist">チェックリストへ進む</button>
+          <button class="button-link" type="button" data-open-ref="a">冒頭8秒を見る</button>
         </div>
       </div>
     </section>
 
-    <section class="image-stack page" aria-label="教育用教材画像">
-      <article class="image-section" id="image-1">
-        <p class="section-title">Section 01</p>
-        <img src="images/1.png" alt="Layer07の教育用教材画像1">
-      </article>
-
-      <article class="image-section" id="image-2">
-        <p class="section-title">Section 02</p>
-        <img src="images/2.png" alt="Layer07の教育用教材画像2">
-      </article>
-
-      <article class="image-section" id="image-3">
-        <p class="section-title">Section 03</p>
-        <img src="images/3.png" alt="Layer07の教育用教材画像3">
-      </article>
-
-      <article class="image-section" id="image-4">
-        <p class="section-title">Section 04</p>
-        <img src="images/4.png" alt="Layer07の教育用教材画像4">
-      </article>
+    <section class="tab-panel page" id="panel-qualifier" role="tabpanel" aria-labelledby="tab-qualifier" tabindex="0">
+      <div class="layer-head">
+        <p class="eyebrow">Layer 01 / Qualifying Round</p>
+        <h2>予選ページ: アルゴリズム攻略から維持率へ</h2>
+        <p>まずは全体像をつかみます。おすすめ欄に載ることと、最後まで見られることを分けて捉え、視聴維持率を本戦の入口として整理します。</p>
+      </div>
+      <div class="image-grid" id="qualifier-images"></div>
     </section>
 
-    <section class="checklist-wrap page" id="checklist" aria-labelledby="checklist-title">
-      <div class="cta-panel">
+    <section class="tab-panel page" id="panel-main" role="tabpanel" aria-labelledby="tab-main" tabindex="0" hidden>
+      <div class="layer-head">
+        <p class="eyebrow">Layer 02 / Championship Stage</p>
+        <h2>本戦ページ: AからKまでの維持率設計</h2>
+        <p>冒頭、音、視覚変化、感情、CTA、信頼維持まで。離脱を減らし、また見たいにつなげるための実装項目を順に確認します。</p>
+      </div>
+      <div class="image-grid" id="main-images"></div>
+    </section>
+
+    <section class="tab-panel page" id="panel-checklist" role="tabpanel" aria-labelledby="tab-checklist" tabindex="0" hidden>
+      <div class="layer-head">
+        <p class="eyebrow">Layer 03 / Final Inspection</p>
         <h2>このチェックリストで動画設計を見直す</h2>
-        <p>刺激を足すだけでなく、注意の維持、信頼、感情の流れまで確認して、最後まで見たくなる構成へ整えます。</p>
+        <p>チェック中に教材を見返したくなったら、参照ボタンから該当ページをすぐ開けます。閉じてもチェック位置はそのままです。</p>
+      </div>
+
+      <div class="reference-panel" aria-labelledby="reference-title">
+        <h3 id="reference-title">教材を参照</h3>
+        <div class="reference-chips" id="reference-chips"></div>
       </div>
 
       <div class="checklist-head">
@@ -430,19 +656,54 @@
       </div>
 
       <div class="controls" aria-label="チェックリスト操作">
-        <button type="button" id="open-all">全て開く</button>
-        <button type="button" id="close-all">全て閉じる</button>
-        <button type="button" id="reset-all">チェックをリセット</button>
+        <button class="control-button" type="button" id="open-all">全て開く</button>
+        <button class="control-button" type="button" id="close-all">全て閉じる</button>
+        <button class="control-button" type="button" id="reset-all">チェックをリセット</button>
       </div>
 
       <div class="accordion" id="accordion"></div>
     </section>
   </main>
 
+  <dialog id="reference-modal" aria-labelledby="modal-title">
+    <div class="modal-shell">
+      <div class="modal-head">
+        <p class="modal-title" id="modal-title">教材を参照</p>
+        <button class="modal-button" type="button" id="close-modal">閉じる</button>
+      </div>
+      <div class="modal-body">
+        <img id="modal-image" src="images/1.png" alt="Layer07 教材ページ1">
+      </div>
+      <div class="modal-foot">
+        <button class="modal-button" type="button" id="prev-ref">前へ</button>
+        <button class="modal-button" type="button" id="next-ref">次へ</button>
+      </div>
+    </div>
+  </dialog>
+
   <script>
+    const materials = [
+      { key: "1", label: "1", src: "images/1.png", alt: "Layer07 予選ページ1 アルゴリズム攻略から視聴維持率へ" },
+      { key: "2", label: "2", src: "images/2.png", alt: "Layer07 予選ページ2 視聴維持率の全体設計" },
+      { key: "3", label: "3", src: "images/3.png", alt: "Layer07 予選ページ3 維持率改善の考え方" },
+      { key: "4", label: "4", src: "images/4.png", alt: "Layer07 予選ページ4 本戦に進むための整理" },
+      { key: "a", label: "A", src: "images/a.png", alt: "Layer07-A 冒頭0から8秒の離脱防止ゾーン" },
+      { key: "b", label: "B", src: "images/b.png", alt: "Layer07-B 聴覚刺激 SEの設計" },
+      { key: "c", label: "C", src: "images/c.png", alt: "Layer07-C 視覚刺激の設計" },
+      { key: "d", label: "D", src: "images/d.png", alt: "Layer07-D パターンブレイクの設計" },
+      { key: "e", label: "E", src: "images/e.png", alt: "Layer07-E 小道具演出の設計" },
+      { key: "f", label: "F", src: "images/f.png", alt: "Layer07-F テロップの設計" },
+      { key: "g", label: "G", src: "images/g.png", alt: "Layer07-G BGMの設計" },
+      { key: "h", label: "H", src: "images/h.png", alt: "Layer07-H 感情導線の設計" },
+      { key: "i", label: "I", src: "images/i.png", alt: "Layer07-I 離脱ポイント監視" },
+      { key: "j", label: "J", src: "images/j.png", alt: "Layer07-J CTAの設計" },
+      { key: "k", label: "K", src: "images/k.png", alt: "Layer07-K 信頼維持の設計" }
+    ];
+
     const checklist = [
       {
         title: "Layer07-0 注意力マネジメント",
+        ref: "1",
         items: [
           "刺激ではなく「注意の維持」を設計している",
           "話が遅い",
@@ -461,6 +722,7 @@
       },
       {
         title: "Layer07-A 冒頭（0〜8秒）",
+        ref: "a",
         items: [
           "サムネと内容が一致している",
           "1秒で世界観が伝わる",
@@ -475,6 +737,7 @@
       },
       {
         title: "Layer07-B 聴覚刺激（SE）",
+        ref: "b",
         items: [
           "マウスクリック",
           "タイピング",
@@ -496,6 +759,7 @@
       },
       {
         title: "Layer07-C 視覚刺激",
+        ref: "c",
         items: [
           "ズームイン",
           "ズームアウト",
@@ -509,6 +773,7 @@
       },
       {
         title: "Layer07-D パターンブレイク",
+        ref: "d",
         items: [
           "3〜5秒ごとに変化がある",
           "テンポ変化がある",
@@ -522,6 +787,7 @@
       },
       {
         title: "Layer07-E 小道具演出",
+        ref: "e",
         items: [
           "テーマに合うアイコン",
           "ブランドに合う素材",
@@ -532,6 +798,7 @@
       },
       {
         title: "Layer07-F テロップ",
+        ref: "f",
         items: [
           "読みやすい",
           "1〜2行以内",
@@ -544,6 +811,7 @@
       },
       {
         title: "Layer07-G BGM",
+        ref: "g",
         items: [
           "映像だけで伝わる",
           "テロップだけでも伝わる",
@@ -555,6 +823,7 @@
       },
       {
         title: "Layer07-H 感情導線",
+        ref: "h",
         items: [
           "驚きがある",
           "共感がある",
@@ -568,6 +837,7 @@
       },
       {
         title: "Layer07-I 離脱ポイント監視",
+        ref: "i",
         items: [
           "3秒",
           "8秒",
@@ -581,6 +851,7 @@
       },
       {
         title: "Layer07-J CTA",
+        ref: "j",
         items: [
           "一番盛り上がった後に入れている",
           "短くシンプル",
@@ -591,6 +862,7 @@
       },
       {
         title: "Layer07-K 信頼維持",
+        ref: "k",
         items: [
           "サムネ詐欺ではない",
           "タイトル詐欺ではない",
@@ -606,6 +878,7 @@
       },
       {
         title: "最終確認",
+        ref: "k",
         items: [
           "最後まで見たくなるか",
           "また見たくなるか",
@@ -614,11 +887,37 @@
       }
     ];
 
+    const qualifierImages = document.getElementById("qualifier-images");
+    const mainImages = document.getElementById("main-images");
+    const referenceChips = document.getElementById("reference-chips");
     const accordion = document.getElementById("accordion");
     const progress = document.getElementById("progress");
+    const modal = document.getElementById("reference-modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalTitle = document.getElementById("modal-title");
+    let currentMaterialIndex = 0;
+
+    function renderImages(target, items) {
+      target.innerHTML = items.map((item) => `
+        <article class="image-card" id="material-${item.key}">
+          <div class="image-card-head">
+            <p class="section-title">Page ${item.label}</p>
+            <button class="chip" type="button" data-open-ref="${item.key}">拡大して見る</button>
+          </div>
+          <img src="${item.src}" alt="${item.alt}">
+        </article>
+      `).join("");
+    }
+
+    function renderReferenceChips() {
+      referenceChips.innerHTML = materials.map((item) => `
+        <button class="chip" type="button" data-open-ref="${item.key}" aria-label="教材ページ${item.label}を開く">${item.label}</button>
+      `).join("");
+    }
 
     function renderChecklist() {
       accordion.innerHTML = checklist.map((group, groupIndex) => {
+        const ref = materials.find((item) => item.key === group.ref);
         const items = group.items.map((item, itemIndex) => {
           const id = `check-${groupIndex}-${itemIndex}`;
           return `
@@ -631,7 +930,12 @@
 
         return `
           <details ${groupIndex === 0 ? "open" : ""}>
-            <summary>${group.title}</summary>
+            <summary>
+              <span class="summary-main">
+                <span>${group.title}</span>
+                <button class="reference-inline" type="button" data-open-ref="${group.ref}">教材 ${ref.label}</button>
+              </span>
+            </summary>
             <div class="items">${items}</div>
           </details>
         `;
@@ -644,8 +948,71 @@
       progress.textContent = `${done} / ${boxes.length} 完了`;
     }
 
+    function activateTab(tabName) {
+      document.querySelectorAll("[role='tab']").forEach((button) => {
+        const selected = button.dataset.tab === tabName;
+        button.setAttribute("aria-selected", String(selected));
+      });
+
+      document.querySelectorAll("[role='tabpanel']").forEach((panel) => {
+        panel.hidden = panel.id !== `panel-${tabName}`;
+      });
+
+      const panel = document.getElementById(`panel-${tabName}`);
+      panel.focus({ preventScroll: true });
+      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function openReference(key) {
+      const index = materials.findIndex((item) => item.key === key);
+      if (index < 0) return;
+      currentMaterialIndex = index;
+      updateModal();
+      if (typeof modal.showModal === "function") {
+        modal.showModal();
+      } else {
+        modal.setAttribute("open", "");
+      }
+    }
+
+    function updateModal() {
+      const item = materials[currentMaterialIndex];
+      modalTitle.textContent = `教材 Page ${item.label}`;
+      modalImage.src = item.src;
+      modalImage.alt = item.alt;
+    }
+
+    function stepReference(direction) {
+      currentMaterialIndex = (currentMaterialIndex + direction + materials.length) % materials.length;
+      updateModal();
+    }
+
+    renderImages(qualifierImages, materials.slice(0, 4));
+    renderImages(mainImages, materials.slice(4));
+    renderReferenceChips();
     renderChecklist();
     updateProgress();
+
+    document.addEventListener("click", (event) => {
+      const tabJump = event.target.closest("[data-tab-jump]");
+      if (tabJump) {
+        activateTab(tabJump.dataset.tabJump);
+        return;
+      }
+
+      const tabButton = event.target.closest("[role='tab']");
+      if (tabButton) {
+        activateTab(tabButton.dataset.tab);
+        return;
+      }
+
+      const referenceButton = event.target.closest("[data-open-ref]");
+      if (referenceButton) {
+        event.preventDefault();
+        event.stopPropagation();
+        openReference(referenceButton.dataset.openRef);
+      }
+    });
 
     accordion.addEventListener("change", (event) => {
       if (event.target.matches('input[type="checkbox"]')) {
@@ -670,6 +1037,24 @@
         box.checked = false;
       });
       updateProgress();
+    });
+
+    document.getElementById("close-modal").addEventListener("click", () => {
+      modal.close();
+    });
+
+    document.getElementById("prev-ref").addEventListener("click", () => {
+      stepReference(-1);
+    });
+
+    document.getElementById("next-ref").addEventListener("click", () => {
+      stepReference(1);
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.close();
+      }
     });
   </script>
 </body>

@@ -510,11 +510,13 @@
     .modal-body {
       overflow: auto;
       padding: 14px;
+      overscroll-behavior: contain;
     }
 
     .modal-body img {
       display: block;
       width: 100%;
+      max-width: none;
       height: auto;
       border: 1px solid rgba(103, 232, 249, 0.28);
       border-radius: var(--radius);
@@ -526,7 +528,7 @@
       }
 
       .page {
-        width: min(100% - 28px, 1120px);
+        width: min(100% - 16px, 1120px);
       }
 
       .header-inner {
@@ -564,7 +566,24 @@
       }
 
       .image-grid {
-        gap: 28px;
+        gap: 32px;
+      }
+
+      .image-card {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .image-card-head {
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .image-card img {
+        border-color: rgba(103, 232, 249, 0.18);
+        box-shadow: 0 0 24px rgba(53, 167, 255, 0.16);
       }
 
       summary {
@@ -583,6 +602,24 @@
       .modal-head,
       .modal-foot {
         flex-wrap: wrap;
+      }
+
+      dialog {
+        width: calc(100% - 12px);
+        max-height: calc(100dvh - 12px);
+      }
+
+      .modal-shell {
+        max-height: calc(100dvh - 12px);
+      }
+
+      .modal-body {
+        padding: 8px;
+      }
+
+      .modal-body img {
+        width: 150%;
+        transform-origin: top left;
       }
 
       .modal-button {
@@ -893,6 +930,7 @@
     const accordion = document.getElementById("accordion");
     const progress = document.getElementById("progress");
     const modal = document.getElementById("reference-modal");
+    const modalBody = document.querySelector(".modal-body");
     const modalImage = document.getElementById("modal-image");
     const modalTitle = document.getElementById("modal-title");
     let currentMaterialIndex = 0;
@@ -980,6 +1018,7 @@
       modalTitle.textContent = `教材 Page ${item.label}`;
       modalImage.src = item.src;
       modalImage.alt = item.alt;
+      modalBody.scrollTo({ top: 0, left: 0 });
     }
 
     function stepReference(direction) {
